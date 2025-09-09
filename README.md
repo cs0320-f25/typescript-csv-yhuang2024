@@ -1,16 +1,46 @@
 # Sprint 1: TypeScript CSV
 
-### Task C: Proposing Enhancement
+### Task B: Proposing Enhancement
 
 - #### Step 1: Brainstorm on your own.
 
+- type blindness (currently "age" and even "name" field can take in any type (ex: "thirty" and 23 are both valid inputs)).
+- possibility of having empty fields/values
+- user may input more/fewer fields than given number of categories
+- acceptable range of numerical values for age (unlikely to occur)
+
 - #### Step 2: Use an LLM to help expand your perspective.
 
+- maintains previously mentioned pitfalls of commas inside quotes and quotes inside quoted strings, empty fields/values (stronger error handling)
+- includes new considerations like trailing commas, whitespace trimming, line endings, boolean detection, config objects like delimiters, type inference, cell- and row-level transformations, asynchronous input support, performance considerations/interoperability and integration, and options to output several different output types
+
 - #### Step 3: use an LLM to help expand your perspective.
+
+1. I’m working on a CSV parser in TypeScript that currently accepts a filename as input and converts rows into strings or objects. What are some missing features or edge cases that I should consider? What improvements would make it easier for **users to use**?
+
+- stronger focus on user flexibility (more options for input)
+- more emphasis on documentation and usability
+- similar error handling
+
+2. I’m working on a CSV parser in TypeScript that currently accepts a filename as input and converts rows into strings or objects. What are some missing features or edge cases that I should consider? What improvements would make it easier for other developers to use in different kinds of apps? **In what circumstances would I use this**?
+
+- includes more detail about exporting to CSV and outside API support
+- includes information about use cases (ex: data science preprocessing pipelines, server log analytics, etc.)
+- similar error handling
 
     Include a list of the top 4 enhancements or edge cases you think are most valuable to explore in the next week’s sprint. Label them clearly by category (extensibility vs. functionality), and include whether they came from you, the LLM, or both. Describe these using the User Story format—see below for a definition. 
 
     Include your notes from above: what were your initial ideas, what did the LLM suggest, and how did the results differ by prompt? What resonated with you, and what didn’t? (3-5 sentences.) 
+
+    1. As a user of the application, I am able to validate input types against a user-provided schema so I can catch type mismatches early and avoid errors. This user story addresses functionality and was a human-generated suggestion.
+
+    2. As a user of the application, I am able to keep empty fields/missing values as empty strings so that missing information does not break the parser. This user story addresses functionality and was a human-generated suggestion.
+
+    3. As a user of the application, I am able to handle circumstances in which I input more or fewer fields than the given number of categories (as sometimes provided in a header) to account for user error. This user story addresses functionality and was a human-generated suggestion.
+
+    4. As a user of the application, I am able to keep my parsed results free of whitespace so my data is clean, consistent, and easy to read for future applications. This user story addresses functionality and was an AI-generated suggestion.
+
+    My initial ideas mainly considered basic edge cases and user error, but the LLM additionally suggested more complex performance enhancement and flexibility with types, integration with other systems, etc. When I later asked about ways to improve user experience, the LLM provided more information about documentation and emphasized user flexibility with inputs. I was also interested in other use cases for the parser, which the LLM provided good information about. I liked that it was able to provide me with examples for when this CSV parser would be used, as well as what specific aspects of development were useful for users and developers, but I thought some information in the performance enhancement section was overkill for such a simple task.
 
 ### Design Choices
 
