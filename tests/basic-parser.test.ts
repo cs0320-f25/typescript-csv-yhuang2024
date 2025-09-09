@@ -20,3 +20,18 @@ test("parseCSV yields only arrays", async () => {
     expect(Array.isArray(row)).toBe(true);
   }
 });
+
+test("parseCSV parses names correctly", async () => {
+  const results = await parseCSV(PEOPLE_CSV_PATH)
+  expect(results[1][0]).toBe("Alice");
+});
+
+test("parseCSV parses numerical ages correctly", async () => {
+  const results = await parseCSV(PEOPLE_CSV_PATH);
+  expect(results[1][1]).toBe("23");
+});
+
+test("parseCSV parses ages of different types", async () => {
+  const results = await parseCSV(PEOPLE_CSV_PATH);
+  expect(results[2][1]).toBe("thirty");
+});
