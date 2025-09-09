@@ -1,5 +1,9 @@
-name,age
-Alice,23
-Bob,thirty
-Charlie,25
-Nim,22
+name,number,fruit
+Alice,23,fig
+Bob,thirty,grape
+Charlie, 25,jackfruit
+Nim, 22, kiwi
+Dakota,"twenty, three",lime
+Eleanor,,lemon
+Fat1ma,18,mango
+Gloria,21,22
