@@ -15,7 +15,13 @@ import { z, ZodType } from "zod";
  * @param path The path to the file being loaded.
  * @returns a "promise" to produce a 2-d array of cell values
  */
-export async function parseCSV<T>(path: string, schema: ZodType<T>): Promise<T[]> {
+
+//overloading if no schema is provided
+export async function parseCSV(path: string): Promise<string[][]>
+//overloading if schema is provided
+export async function parseCSV<T>(path: string, schema: ZodType<T>): Promise<T[]>;
+//handles both cases
+export async function parseCSV<T>(path: string, schema?: ZodType<T>): Promise<string[][] | T[]> {
   // This initial block of code reads from a file in Node.js. The "rl"
   // value can be iterated over in a "for" loop. 
   const fileStream = fs.createReadStream(path);
@@ -23,30 +29,37 @@ export async function parseCSV<T>(path: string, schema: ZodType<T>): Promise<T[]
     input: fileStream,
     crlfDelay: Infinity, // handle different line endings
   })
-  
-  // Create an empty array to hold the results
 
-  //fallback if schema is not provided
-  if (!schema) {
-    let result = []
-    for await (const line of rl) {
-      const values = line.split(",").map((v) => v.trim());
-      result.push(values);
-    }
-    return result
-  }
-  
   // We add the "await" here because file I/O is asynchronous. 
   // We need to force TypeScript to _wait_ for a row before moving on. 
   // More on this in class soon!
-  let validatedResult: T[] = []
-  for await (const line of rl) {
-    const values = line.split(",").map((v) => v.trim());
-    const parsed = schema.safeParse(values)
-    if(!parsed.success) {
-      throw new Error("Failed to parse line: " + line + parsed.error.message)
+
+  //if no schema is passed in, return string[][]
+    if (!schema) {
+      const rows: string[][] = []
+      for await (const line of rl) {
+        const values = line.split(",").map((v) => v.trim());
+        if (values.length != 3) {
+          throw new Error("Each line must have exactly 3 values. Erroneous line: " + line)
+        }
+        rows.push(values)
+      } 
+      return rows
+
+      //if schema is provided, return schema type (generic T[])
+    } else {
+      const rows: T[] = []
+      for await (const line of rl) {
+        const values = line.split(",").map((v) => v.trim());
+        if (values.length != 3) {
+          throw new Error("Each line must have exactly 3 values. Erroneous line: " + line)
+        }
+        const parsed = schema.safeParse(values)
+        if(!parsed.success) {
+          throw new Error("Failed to parse line: " + line + parsed.error.message)
+      }
+      rows.push(parsed.data)
+      }
+      return rows
     }
-    validatedResult.push(parsed.data)
-  }
-  return validatedResult
 }

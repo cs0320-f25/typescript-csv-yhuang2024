@@ -2,8 +2,9 @@ import { parseCSV } from "./basic-parser";
 import * as path from "path";
 import { z } from "zod";
 
-export const PeopleSchema = z.tuple([z.string(),z.number(),z.string()])
-.transform(tup => ({name: tup[0], number: tup[1], fruit: tup[2]}));
+export const PeopleSchema = z.tuple([z.string(),z.coerce.number(),z.string()])
+.transform(tup => ({name: tup[0], number: tup[1], fruit: tup[2]}))
+.refine(obj => !isNaN(obj.number), { message: "must be a valid number"})
 
 /*
   Example of how to run the parser outside of a test suite.
