@@ -46,17 +46,29 @@
 
 ### 1340 Supplement
 
+N/A
+
 - #### 1. Correctness
+
+A CSV parser should yield only arrays, handle empty fields, only parse when types match provided schema, handle commas within quoted fields and quotes within quotes, handle whitespace, split fields of each record correctly, and be able to be used without knowledge of the CSV format.
 
 - #### 2. Random, On-Demand Generation
 
+With randomly generated content, we could test whether our current test cases are robust to different types, errors/edge cases, and consistently changing fields, which could expose new edge cases and considerations for our program that will make it more resilient to change and error.
+
 - #### 3. Overall experience, Bugs encountered and resolved
+
+There was a lot more writing involved in this sprint than in previous coding assignments I've received, which I liked because it allowed me to think about the process more in-depth and consider user needs. I was surprised that were were not asked to immediately fix the parser, but rather investigate intricacies of Typescript like types, Zod schema, etc. 
+
 #### Errors/Bugs:
-#### Tests:
-#### How To…
+
+I struggled with the concept of type unions, which made it difficult for me to identify how to return the right generic type when users gave a schema rather than string[][]. I looked through the Typescript documentation, asked on Ed, and asked Copilot to come up with a better solution. 
 
 #### Team members and contributions (include cs logins):
 
-#### Collaborators (cslogins of anyone you worked with on this project and/or generative AI):
-#### Total estimated time it took to complete project:
-#### Link to GitHub Repo:  
+#### Collaborators (cslogins of anyone you worked with on this project and/or generative AI): 
+Copilot
+#### Total estimated time it took to complete project: 
+6 hours
+#### Link to GitHub Repo: 
+https://github.com/cs0320-f25/typescript-csv-yhuang2024
