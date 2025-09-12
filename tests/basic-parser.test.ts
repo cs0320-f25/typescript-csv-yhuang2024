@@ -3,8 +3,9 @@ import * as path from "path";
 import { z } from "zod";
 
 const PEOPLE_CSV_PATH = path.join(__dirname, "../data/people.csv")
-export const PeopleSchema = z.tuple([z.string(),z.number(),z.string()])
-.transform(tup => ({name: tup[0], number: tup[1], fruit: tup[2]}))
+export const PeopleSchema = z.object({name: z.string(),number: z.string(),fruit: z.string()})
+.transform(({name, number, fruit}) => ({name, number: Number(number), fruit}))
+.refine(obj => !isNaN(obj.number), { message: "Must be a valid number"})
 
 test("parseCSV yields arrays", async () => {
   const results = await parseCSV(PEOPLE_CSV_PATH, PeopleSchema)
@@ -24,15 +25,15 @@ test("parseCSV yields only arrays", async () => {
 
 test("parseCSV parses names correctly", async () => {
   const results = await parseCSV(PEOPLE_CSV_PATH, PeopleSchema)
-  expect(results[1][0]).toBe("Alice")
+  expect(results[1].name).toBe("Alice")
 });
 
-test("parseCSV parses numerical ages correctly", async () => {
+test("parseCSV parses numbers correctly", async () => {
   const results = await parseCSV(PEOPLE_CSV_PATH, PeopleSchema)
-  expect(results[1][1]).toBe("23")
+  expect(results[1].number).toBe("23")
 });
 
-test("parseCSV does not parse ages of different types", async () => {
+test("parseCSV does not parse numbers of different types", async () => {
   const results = await parseCSV(PEOPLE_CSV_PATH, PeopleSchema)
   const safeResult = PeopleSchema.safeParse(results[2]);
   expect(safeResult.success).toBe(false)
@@ -57,13 +58,13 @@ test("parseCSV handles extra whitespace", async () => {
 
 test("parseCSV handles invalid names", async () => {
   const results = await parseCSV(PEOPLE_CSV_PATH, PeopleSchema)
-  const safeResult = PeopleSchema.safeParse(results[7][0]);
+  const safeResult = PeopleSchema.safeParse(results[7].name);
   expect(safeResult.success).toBe(false)
 });
 
 test("parseCSV handles invalid fruits", async () => {
   const results = await parseCSV(PEOPLE_CSV_PATH, PeopleSchema)
-  const safeResult = PeopleSchema.safeParse(results[8][2]);
+  const safeResult = PeopleSchema.safeParse(results[8].fruit);
   expect(safeResult.success).toBe(false)
 });
 
