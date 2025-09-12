@@ -44,13 +44,15 @@
 
 ### Design Choices
 
+I chose to use type overloading to accept both T[] and string[][] parameters. I was struggling with making sure Zod was able to detect what type the caller would input using type union of T[] | string[][], so type overloading seemed to be the best choice. 
+
 ### 1340 Supplement
 
 N/A
 
 - #### 1. Correctness
 
-A CSV parser should yield only arrays, handle empty fields, only parse when types match provided schema, handle commas within quoted fields and quotes within quotes, handle whitespace, split fields of each record correctly, and be able to be used without knowledge of the CSV format.
+A CSV parser should yield ordered objects, handle empty fields, only parse when types match provided schema, handle commas within quoted fields and quotes within quotes, handle whitespace, split fields of each record correctly, and be able to be used without knowledge of the CSV format.
 
 - #### 2. Random, On-Demand Generation
 
@@ -62,13 +64,13 @@ There was a lot more writing involved in this sprint than in previous coding ass
 
 #### Errors/Bugs:
 
-I struggled with the concept of type unions, which made it difficult for me to identify how to return the right generic type when users gave a schema rather than string[][]. I looked through the Typescript documentation, asked on Ed, and asked Copilot to come up with a better solution. 
+I struggled with the concept of type unions, which made it difficult for me to identify how to return the right generic type when users gave a schema rather than string[][]. I looked through the Typescript documentation, asked on Ed, and asked Copilot to come up with better solutions and debug unknown errors.
 
 #### Team members and contributions (include cs logins):
 
 #### Collaborators (cslogins of anyone you worked with on this project and/or generative AI): 
 Copilot
 #### Total estimated time it took to complete project: 
-6 hours
+7 hours
 #### Link to GitHub Repo: 
 https://github.com/cs0320-f25/typescript-csv-yhuang2024
