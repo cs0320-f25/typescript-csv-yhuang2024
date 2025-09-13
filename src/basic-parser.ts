@@ -2,11 +2,13 @@ import * as fs from "fs";
 import * as readline from "readline";
 import { z, ZodType } from "zod";
 
+//an error type to define errors
 export type ParseError = {
   line: number
   errors: string[]
 }
 
+//parseCSV's return value, which includes generic data and errors
 export type ParseResult<T> = {
   data: T[] | string[][]
   errors: ParseError[]
@@ -39,11 +41,11 @@ export async function parseCSV<T>(path: string, schema?: ZodType<T>): Promise<Pa
   // We need to force TypeScript to _wait_ for a row before moving on. 
   // More on this in class soon!
 
-  //if no schema is passed in, return string[][]
     const rows: string[][] = []
     const parsedRows: T[] = []
     const errors: ParseError[] = []
 
+    //keep track of line number for errors
     let lineNumber = 0;
     for await (const line of rl) {
       lineNumber++

@@ -4,7 +4,7 @@ import { z } from "zod";
 
 const PEOPLE_CSV_PATH = path.join(__dirname, "../data/people.csv")
 export const PeopleSchema = z.tuple([z.string(),
-  z.string().refine(val => !isNaN(Number(val)), {message: "must be a valid number"})
+  z.string().refine(val => !isNaN(Number(val)), {message: "Must be a valid number."})
   .transform(val => Number(val)),z.string()])
   .transform(([name, number, fruit]) => ({name, number, fruit}))
 
@@ -46,7 +46,7 @@ test("parseCSV parses numbers correctly", async () => {
 
 test("parseCSV does not parse numbers of different types when no schema is provided", async () => {
   const results = await parseCSV(PEOPLE_CSV_PATH)
-  const safeResult = PeopleSchema.safeParse(results.data[2]);
+  const safeResult = PeopleSchema.safeParse(results.data[2]); //Bob's row with "thirty"
   expect(safeResult.success).toBe(false)
 });
 
@@ -55,7 +55,6 @@ test("parseCSV handles empty fields", async () => {
   expect(results.data[3]).toEqual({name: "Eleanor", number: 19, fruit: ""})
 });
 
-// currently fails with basic broken implementation
 test("parseCSV handles commas within quoted fields", async () => {
   const results = await parseCSV(PEOPLE_CSV_PATH, PeopleSchema)
   const names = (results.data as Person[]).map(person => person.name)

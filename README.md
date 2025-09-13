@@ -66,11 +66,13 @@ There was a lot more writing involved in this sprint than in previous coding ass
 
 I struggled with the concept of type unions, which made it difficult for me to identify how to return the right generic type when users gave a schema rather than string[][]. I looked through the Typescript documentation, asked on Ed, and asked Copilot to come up with better solutions and debug unknown errors.
 
+I also struggled with editing my tests to reflect the fact that I changed my design to return an error type. By looking through documentation and Stack Overflow, I was able to find the right syntax for checking for errors, and even got help with design by putting errors in a ParseError array, which would make it easier to test for them according to the guidelines we covered in class.
+
 #### Team members and contributions (include cs logins):
 
 #### Collaborators (cslogins of anyone you worked with on this project and/or generative AI): 
 Copilot
 #### Total estimated time it took to complete project: 
-7 hours
+8 hours
 #### Link to GitHub Repo: 
 https://github.com/cs0320-f25/typescript-csv-yhuang2024
