@@ -71,7 +71,7 @@ I also struggled with editing my tests to reflect the fact that I changed my des
 #### Team members and contributions (include cs logins):
 
 #### Collaborators (cslogins of anyone you worked with on this project and/or generative AI): 
-Copilot
+Copilot (see chat logs here: https://docs.google.com/document/d/1SfeeKcifq6YRGA34BW_1GnFvItLFfULP7j06gvW2VzY/edit?usp=sharing)
 #### Total estimated time it took to complete project: 
 8 hours
 #### Link to GitHub Repo: 
