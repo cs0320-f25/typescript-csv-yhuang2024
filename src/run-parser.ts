@@ -18,9 +18,9 @@ async function main() {
 
   // Notice the difference between "of" and "in". One iterates over the entries, 
   // another iterates over the indexes only.
-  for(const record of results)
+  for(const record of results.data)
     console.log(record)
-  for(const record in results)
+  for(const record in results.data)
     console.log(record)
 }
 

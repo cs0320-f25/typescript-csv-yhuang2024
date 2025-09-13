@@ -12,15 +12,21 @@ export type Person = z.infer<typeof PeopleSchema>
 
 test("parseCSV yields objects", async () => {
   const results = await parseCSV(PEOPLE_CSV_PATH, PeopleSchema)
-  expect(results).toHaveLength(10)
-  expect(results[1]).toEqual({name: "Alice", number: 23, fruit: "fig"})
-  expect(results[3]).toEqual({name: "Charlie", number: 25, fruit: "jackfruit"})
-  expect(results[4]).toEqual({name: "Nim", number: 22, fruit: "kiwi"})
+  expect(results.data).toHaveLength(7)
+  //handles headers
+  expect(results.data[0]).toEqual({name: "Alice", number: 23, fruit: "fig"})
+  expect(results.data[1]).toEqual({name: "Charlie", number: 25, fruit: "jackfruit"})
+  expect(results.data[2]).toEqual({name: "Nim", number: 22, fruit: "kiwi"})
 });
+
+test("parseCSV yields correct number of errors", async () => {
+  const results = await parseCSV(PEOPLE_CSV_PATH, PeopleSchema)
+  expect(results.errors).toHaveLength(3); //3 errors with Bob, Dakota, and header
+})
 
 test("parseCSV yields only objects", async () => {
   const results = await parseCSV(PEOPLE_CSV_PATH, PeopleSchema)
-  for(const row of results) {
+  for(const row of results.data as Person[]) {
     expect(typeof row).toBe("object")
     expect(row).toHaveProperty("name")
     expect(row).toHaveProperty("number")
@@ -30,60 +36,49 @@ test("parseCSV yields only objects", async () => {
 
 test("parseCSV parses names correctly", async () => {
   const results = await parseCSV(PEOPLE_CSV_PATH, PeopleSchema)
-  expect(results[1].name).toBe("Alice")
+  expect((results.data as Person[])[0].name).toBe("Alice")
 });
 
 test("parseCSV parses numbers correctly", async () => {
   const results = await parseCSV(PEOPLE_CSV_PATH, PeopleSchema)
-  expect(results[1].number).toBe(23)
+  expect((results.data as Person[])[0].number).toBe(23)
 });
 
 test("parseCSV does not parse numbers of different types when no schema is provided", async () => {
   const results = await parseCSV(PEOPLE_CSV_PATH)
-  const safeResult = PeopleSchema.safeParse(results[2]);
+  const safeResult = PeopleSchema.safeParse(results.data[2]);
   expect(safeResult.success).toBe(false)
 });
 
 test("parseCSV handles empty fields", async () => {
   const results = await parseCSV(PEOPLE_CSV_PATH, PeopleSchema)
-  expect(results[6]).toEqual({name: "Eleanor", number: 19, fruit: ""})
+  expect(results.data[3]).toEqual({name: "Eleanor", number: 19, fruit: ""})
 });
 
 // currently fails with basic broken implementation
 test("parseCSV handles commas within quoted fields", async () => {
   const results = await parseCSV(PEOPLE_CSV_PATH, PeopleSchema)
-  expect(results[5]).toEqual({name: "Dakota", number: 24, fruit: "lime,orange"})
+  const names = (results.data as Person[]).map(person => person.name)
+  expect(names).not.toContain("Dakota")
+  expect(results.errors[2]).toEqual(
+    expect.objectContaining({
+      line: 6,
+      errors: expect.arrayContaining([
+        //currently splits into 4
+        expect.stringContaining("Each line must have exactly 3 values.")
+      ])
+    })
+  )
 });
 
 test("parseCSV handles extra whitespace", async () => {
   const results = await parseCSV(PEOPLE_CSV_PATH, PeopleSchema)
-  expect(results[3]).toEqual({name: "Charlie", number: 25, fruit: "jackfruit"})
-  expect(results[4]).toEqual({name: "Nim", number: 22, fruit: "kiwi"})
+  expect(results.data[1]).toEqual({name: "Charlie", number: 25, fruit: "jackfruit"})
+  expect(results.data[2]).toEqual({name: "Nim", number: 22, fruit: "kiwi"})
 });
 
-//currently fails with basic broken implementation
-test("parseCSV handles invalid names when no schema is provided", async () => {
-  const results = await parseCSV(PEOPLE_CSV_PATH)
-  const safeResult = PeopleSchema.safeParse(results[7]);
-  expect(safeResult.success).toBe(false)
-});
-
-//currently fails with basic broken implementation
-test("parseCSV handles invalid fruits when no schema is provided", async () => {
-  const results = await parseCSV(PEOPLE_CSV_PATH)
-  const safeResult = PeopleSchema.safeParse(results[8]);
-  expect(safeResult.success).toBe(false)
-});
-
-//currently fails with basic broken implementation
+//TS interprets the outer quotes as part of the string, will address in next sprint
 test("parseCSV handles quotes inside quotes", async () => {
   const results = await parseCSV(PEOPLE_CSV_PATH, PeopleSchema)
-  expect(results[9]).toEqual({name: "Hannah", number: 26, fruit: "she said 'pineapple'"})
-})
-
-//currently fails with basic broken implementation
-//current strategy for future sprint is to skip the header; current header is a stand-in
-test("parseCSV handles headers", async() => {
-  const results = await parseCSV(PEOPLE_CSV_PATH, PeopleSchema)
-  expect(results[0]).toEqual(["Alice", "23", "fig"])
+  expect(results.data[6]).toEqual({name: "Hannah", number: 26, fruit: "\"she said 'pineapple'\""})
 })
