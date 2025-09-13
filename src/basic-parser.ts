@@ -67,6 +67,7 @@ export async function parseCSV<T>(path: string, schema?: ZodType<T>): Promise<Pa
       }
     }
     return {
+      //if a schema is provided return parsedRows (T[]), if not return rows (string[][])
       data: schema ? parsedRows : rows,
       errors,
     }

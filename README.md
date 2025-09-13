@@ -44,7 +44,7 @@
 
 ### Design Choices
 
-I chose to use type overloading to accept both T[] and string[][] parameters. I was struggling with making sure Zod was able to detect what type the caller would input using type union of T[] | string[][], so type overloading seemed to be the best choice. 
+I chose to make a custom type called a ParseResult that can take in both generic/string[][] types for type safety as well as an array of custom ParseErrors, which can return error messages for unsuccessfully parsed lines. With this design, I was able to return errors and test for them effectively while maintaining validation and type safety with generics. 
 
 ### 1340 Supplement
 
